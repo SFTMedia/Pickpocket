@@ -27,7 +27,7 @@ public class InventoryClick implements Listener {
         Player player = (Player) event.getWhoClicked();
         Profile profile = Profiles.get(player, pickpocket.getProfiles());
         PickpocketItemInventory pickpocketItemInventory = profile.getPickpocketItemInventory();
-        Inventory inventory = event.getClickedInventory();
+        Inventory inventory = event.getInventory();
         ItemStack currentItem = event.getCurrentItem();
         try {
             if (inventory.getItem(event.getSlot()) == null) return;
@@ -80,7 +80,8 @@ public class InventoryClick implements Listener {
         if (Math.random() < pickpocketItem.calculateStolenBasedChance(profile.getTimesStolenOf(pickpocketItem))) {
             if (!profile.hasPickpocketItem(pickpocketItem)) {
                 profile.givePickpocketItem(pickpocketItem);
-                pickpocket.getServer().broadcastMessage(ChatColor.GRAY + profile.getPlayer().getName() + ChatColor.WHITE + " recieved the pickpocket item " + pickpocketItem.getName() + "!");
+                profile.getVictim().sendMessage(ChatColor.GRAY + profile.getPlayer().getName() + ChatColor.WHITE + " just stole your " + pickpocketItem.getName() + "!");
+                profile.getPlayer().sendMessage(ChatColor.GRAY + " you stole their " + pickpocketItem.getName() + "!");
             }
         } else {
             profile.getPlayer().sendMessage(ChatColor.RED + "Theft unsuccessful.");
