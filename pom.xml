@@ -2,8 +2,8 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>logan</groupId>
-	<artifactId>pickpokcet</artifactId>
-	<version>1.0.6</version>
+	<artifactId>pickpocket</artifactId>
+	<version>1.0.8</version>
 	<packaging>jar</packaging>
 
 	<name>PickPocket</name>
@@ -29,7 +29,12 @@
         <repository>
             <id>spigot-repo</id>
             <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
-        </repository>
+		</repository>
+		
+		<repository>
+			<id>sk89q-repo</id>
+			<url>https://maven.enginehub.org/repo/</url>
+		</repository>
 	</repositories>
 	<dependencies>
         <dependency>
@@ -37,6 +42,13 @@
             <artifactId>bukkit</artifactId>
             <version>1.8.6-R0.1-SNAPSHOT</version>
             <type>jar</type>
-        </dependency>
+		</dependency>
+		
+		<dependency>
+			<groupId>com.sk89q.worldguard</groupId>
+			<artifactId>worldguard-legacy</artifactId>
+			<version>6.1.3-SNAPSHOT</version>
+			<scope>provided</scope>
+		</dependency>
 	</dependencies>
 </project>

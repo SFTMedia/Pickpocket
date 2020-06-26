@@ -1,7 +1,8 @@
 main: logan.pickpocket.main.Pickpocket
 name: PickPocket
-version: v1.0.6
+version: 1.0.8
 author: TTG_TRE
+soft_depend: [WorldGuard]
 commands:
   pickpocket:
     aliases: pp
