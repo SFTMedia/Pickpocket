@@ -5,6 +5,7 @@ import logan.pickpocket.main.Profile;
 import logan.pickpocket.main.Profiles;
 
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
+import com.sk89q.worldguard.protection.flags.DefaultFlag;
 import com.sk89q.worldguard.protection.flags.StateFlag;
 import com.sk89q.worldguard.protection.flags.FlagContext.FlagContextBuilder;
 import com.sk89q.worldguard.protection.flags.StateFlag.State;
@@ -34,13 +35,10 @@ public class PlayerInteract implements Listener {
         if (!player.isSneaking()) return;
         Profile profile = Profiles.get(player, pickpocket.getProfiles());
 
-        if(WorldGuardPlugin.inst().getRegionContainer().createQuery().queryValue(event.getRightClicked().getLocation(), player, new StateFlag("pvp", false)).equals(State.DENY)){
-            System.out.println("blocked from pvp");
-            player.sendMessage("Saftey Samurai: NOPE");
-            event.getRightClicked().sendMessage("Saftey Samurai: "+ player.getName()+" tried to pickpocket you, but I kept you safe while you are in my domain.");
+        if(!WorldGuardPlugin.inst().getRegionManager(event.getPlayer().getWorld()).getApplicableRegions(event.getRightClicked().getLocation()).allows(DefaultFlag.PVP)){
+            player.sendMessage(ChatColor.GREEN+"Saftey Samurai"+ChatColor.RESET+": NOPE");
+            event.getRightClicked().sendMessage(ChatColor.GREEN+"Saftey Samurai"+ChatColor.RESET+": "+ player.getName()+" tried to pickpocket you, but I kept you safe while you are in my domain.");
             return;
-        } else {
-            System.out.println("allowed from pvp");
         }
 
         if(event.getRightClicked().hasPermission("pickpocket.staff")) {
@@ -49,7 +47,7 @@ public class PlayerInteract implements Listener {
             return;
         }
 
-        if (!pickpocket.getCooldowns().containsKey(player) && !profile.canCooldownBypass()) {
+        if (!pickpocket.getCooldowns().containsKey(player) || player.hasPermission("pickpocket.bypass")) {
             Player entity = (Player) event.getRightClicked();
             player.openInventory(entity.getInventory());
             profile.setStealing(entity);
@@ -57,10 +55,12 @@ public class PlayerInteract implements Listener {
             return;
         }
 
-        if (pickpocket.getCooldowns().containsKey(player) && !profile.canCooldownBypass()) {
+
+        if (pickpocket.getCooldowns().containsKey(player) && !player.hasPermission("pickpocket.bypass")) {
             player.sendMessage(ChatColor.RED + "You must wait " + pickpocket.getCooldowns().get(player) + " seconds before attempting another pickpocket.");
             return;
         }
+
 
         Player entity = (Player) event.getRightClicked();
         player.openInventory(entity.getInventory());
